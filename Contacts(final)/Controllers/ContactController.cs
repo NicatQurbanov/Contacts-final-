@@ -36,6 +36,24 @@ namespace Contact.Controllers
             }
         }
 
+        public void Animation(int sleep)
+        {
+            string[] loadingText = ["Loading", "lOading", "loAding", "loaDing", "loadIng", "loadiNg", "loadinG"];
+            int count = 0;
+            do
+            {
+                foreach (string s in loadingText)
+                {
+                    Console.Write($"\r{s}...");
+                    Thread.Sleep(sleep);
+                }
+                count++;
+            } while (count != 10);
+
+            Console.Write($"\r{new string(' ', Console.BufferWidth)}");
+
+        }
+
         public void ShowContacts(User user)
         {
             foreach(Contact contact in user.contacts)

@@ -20,12 +20,12 @@ namespace Contact
             
             userController.AddUser(nijat);
             userController.AddUser(ali);
-          
+            
             ContactController contactController = new ContactController(nijat);
             contactController.AddContact("vusal","hacixelilov","+994503211233");
             contactController.AddContact("seyyad","babazade", "+994503211233");
             contactController.AddContact("sadiq", "axundov", "+994502098010");
-
+            contactController.Animation(75);
             contactController = new ContactController(ali);
             contactController.AddContact("nihat", "huseynli", "+994512092156");
             contactController.AddContact("mehemmed", "bayramov", "+994500981212");
