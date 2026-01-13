@@ -17,12 +17,40 @@ namespace Contact.Controllers
             this.users = new User[1];
         }
 
-        public void AddUser(User profile = null)
+        public void AddUser(User profile)
         {
-            this.users[0] = profile;
+            this.users[users.Length - 1] = profile;
             Array.Resize(ref users, users.Length + 1);
         }
 
+        public void AddUser(string nickname, string password)
+        {
+            this.users[users.Length - 1] = new User(nickname, password);
+            Array.Resize(ref users, users.Length + 1);
+        }
+
+        public User GetUser(string input)
+        {
+            string[] processedInput = ProcessInput(input);
+
+            if (users.Length == 1 && users[0] == null)
+            {
+                Console.WriteLine("There are no users.");
+                return null;
+            }
+
+            else
+                for (int i = 0; i < users.Length; i++)
+                {
+                    if (users[i] == null) continue;
+                    else if (users[i].nickname == processedInput[0] && users[i].password == processedInput[1])
+                    {
+                        return users[i];
+                    }
+                }
+            Console.WriteLine("Incorrect name and/or password input.");
+            return null;
+        }
         public void AddUser(string input)
         {
             string[] processedInput = ProcessInput(input);
@@ -31,7 +59,7 @@ namespace Contact.Controllers
             {
                 if (!FindUserByNickname(processedInput[0]))
                 {
-                    this.users[0] = new User(processedInput[0], processedInput[1]);
+                    this.users[users.Length - 1] = new User(processedInput[0], processedInput[1]);
                     Array.Resize(ref users, users.Length + 1);
                     Console.WriteLine("You are signed in!");
                 }

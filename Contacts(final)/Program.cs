@@ -14,33 +14,25 @@ namespace Contact
             string? readResult;
             string menuSelection = "";
             UserController userController = new UserController();
-            User user = new User("Default", "User");
-            ContactController contactController = new ContactController(user);
 
-            //Profile nijat = new Profile("nijat", "qwerty90");
-            //Profile ali = new Profile("ali", "qwerty901");
-            //Profile vusal = new Profile("vusal", "qwerty902");
-            //Profile seyyad = new Profile("seyyad", "qwerty903");
+            User nijat = new User("nijat", "qwerty90@");
+            User ali = new User("ali", "12345a!");
+            
+            userController.AddUser(nijat);
+            userController.AddUser(ali);
+          
+            ContactController contactController = new ContactController(nijat);
+            contactController.AddContact("vusal","hacixelilov","+994503211233");
+            contactController.AddContact("seyyad","babazade", "+994503211233");
+            contactController.AddContact("sadiq", "axundov", "+994502098010");
 
-            //Contact new_contact = new Contact("nijat", "qurbanov", "+994504949494");
-            Contact contact = new Contact("Nicat", "Qurbanov", "+994504801601");
-            contactController.AddContact(contact);
-            Console.WriteLine(user.contacts[0].phoneNumber);
-
-            User new_user = new User("Zulfuqar","qwerty90");
-            contactController = new ContactController(new_user);
-            Contact contact1 = new Contact("Ali","Qarashli","+994505050500");
-            contactController.AddContact(contact1);
-            Console.WriteLine(new_user.contacts[0].phoneNumber);
-            contactController = new ContactController(user);
-            contactController.AddContact(contact1);
-            Console.WriteLine(user.contacts[1].phoneNumber);
-           
-
+            contactController = new ContactController(ali);
+            contactController.AddContact("nihat", "huseynli", "+994512092156");
+            contactController.AddContact("mehemmed", "bayramov", "+994500981212");
 
             do
             {
-                Console.WriteLine("Welcome. Choose option:\n1.Sign in.\n2.Sign up.\n");
+                Console.WriteLine("Choose option:\n1.Sign in.\n2.Sign up.\n");
                 Console.WriteLine("Enter exit to leave application.");
                 readResult = Console.ReadLine();
                 if (readResult != null)
@@ -60,20 +52,21 @@ namespace Contact
                         if (readResult != null)
                         {
                             userController.AddUser(readResult);
-                            contactController = new ContactController(userController.users[0]);
+                            contactController = new ContactController(userController.GetUser(readResult));
+                            contactController.AddContact("nicat", "qurbanov", "+994504801601");
                         }
-                           
+
 
                         break;
                     case "2":
                         Console.WriteLine("Enter nickname and password, separated by comma (,)");
                         readResult = Console.ReadLine();
-                        
+
                         if (readResult != null)
                         {
                             if (userController.FindUser(readResult))
                             {
-                                Console.WriteLine(contactController.user.contacts[0].phoneNumber);
+                                contactController.ShowContacts(userController.GetUser(readResult));
                             }
                         }
 
@@ -81,18 +74,6 @@ namespace Contact
                 }
 
             } while (menuSelection != "exit");
-
-
-
-
-
-
-
-            //ContactController contactController = new ContactController(profileController.profiles[0]);
-            //contactController.AddContact(new_contact);
-
-
-
         }
     }
 }
