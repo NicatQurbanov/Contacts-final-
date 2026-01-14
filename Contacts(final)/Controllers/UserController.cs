@@ -54,7 +54,8 @@ namespace Contact.Controllers
 
                 return processedInput;
             }
-            return null;
+            else
+                return null;
         }
 
         public void Animation(int sleep)
@@ -88,21 +89,21 @@ namespace Contact.Controllers
 
         public void AddUser(string input)
         {
-            if (input != null)
-            {
                 string[] processedInput = ProcessInput(input);
-
-                if (Regex.IsMatch(processedInput[0], "^[a-zA-Z0-9_]{2,20}$") && Regex.IsMatch(processedInput[1], "^(?=.*[a-z])(?=.*\\d)(?=.*[^a-zA-Z0-9])[^\\s]{6,20}$"))
+                if (processedInput != null)
                 {
-                    if (!FindUserByNickname(processedInput[0]))
+
+                    if (Regex.IsMatch(processedInput[0], "^[a-zA-Z0-9_]{2,20}$") && Regex.IsMatch(processedInput[1], "^(?=.*[a-z])(?=.*\\d)(?=.*[^a-zA-Z0-9])[^\\s]{6,20}$"))
                     {
-                        this.users[users.Length - 1] = new User(processedInput[0], processedInput[1]);
-                        Array.Resize(ref users, users.Length + 1);
-                        Animation(70);
-                        Console.WriteLine("You are signed in!");
+                        if (!FindUserByNickname(processedInput[0]))
+                        {
+                            this.users[users.Length - 1] = new User(processedInput[0], processedInput[1]);
+                            Array.Resize(ref users, users.Length + 1);
+                            Animation(70);
+                            Console.WriteLine("You are signed in!");
+                        }
                     }
                 }
-            }
             else
                 Console.WriteLine("The password or/and nickname are not qualified.");
         }
