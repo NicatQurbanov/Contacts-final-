@@ -72,7 +72,12 @@ namespace Contact
                                     case "1":
 
                                         Console.WriteLine("Write contact's first name, last name and phone number separated by comma respectively.");
+                                        readResult = Console.ReadLine();
 
+                                        if (readResult != null)
+                                            contactController.AddContact(readResult);
+
+                                        contactController.ShowContacts(userController.GetUser(thisUser));
                                         break;
                                     case "2":
 
