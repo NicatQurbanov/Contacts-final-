@@ -1,5 +1,4 @@
-﻿
-using Contact.Models;
+﻿using Contact.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,37 +30,66 @@ namespace Contact.Controllers
 
         public User GetUser(string input)
         {
-            string[] processedInput = ProcessInput(input);
-
-            if (users.Length == 1 && users[0] == null)
+            if (input != null)
             {
-                Console.WriteLine("There are no users.");
+                string[] processedInput = ProcessInput(input);
+
+                if (users.Length == 1 && users[0] == null)
+                {
+                    Console.WriteLine("There are no users.");
+                    return null;
+                }
+
+                else
+                    for (int i = 0; i < users.Length; i++)
+                    {
+                        if (users[i] == null) continue;
+                        else if (users[i].nickname == processedInput[0] && users[i].password == processedInput[1])
+                        {
+                            return users[i];
+                        }
+                    }
+            }
+            else
+            {
+                Console.WriteLine("Incorrect name and/or password input.");
                 return null;
             }
-
-            else
-                for (int i = 0; i < users.Length; i++)
-                {
-                    if (users[i] == null) continue;
-                    else if (users[i].nickname == processedInput[0] && users[i].password == processedInput[1])
-                    {
-                        return users[i];
-                    }
-                }
-            Console.WriteLine("Incorrect name and/or password input.");
             return null;
         }
+
+        public void Animation(int sleep)
+        {
+            string[] loadingText = ["Loading", "lOading", "loAding", "loaDing", "loadIng", "loadiNg", "loadinG"];
+            int count = 0;
+            do
+            {
+                foreach (string s in loadingText)
+                {
+                    Console.Write($"\r{s}...");
+                    Thread.Sleep(sleep);
+                }
+                count++;
+            } while (count != 3);
+
+            Console.Write($"\r{new string(' ', Console.BufferWidth)}");
+        }
+
         public void AddUser(string input)
         {
-            string[] processedInput = ProcessInput(input);
-
-            if (Regex.IsMatch(processedInput[0], "^[a-zA-Z0-9_]{2,20}$") && Regex.IsMatch(processedInput[1], "^(?=.*[a-z])(?=.*\\d)(?=.*[^a-zA-Z0-9])[^\\s]{6,20}$"))
+            if (input != null)
             {
-                if (!FindUserByNickname(processedInput[0]))
+                string[] processedInput = ProcessInput(input);
+
+                if (Regex.IsMatch(processedInput[0], "^[a-zA-Z0-9_]{2,20}$") && Regex.IsMatch(processedInput[1], "^(?=.*[a-z])(?=.*\\d)(?=.*[^a-zA-Z0-9])[^\\s]{6,20}$"))
                 {
-                    this.users[users.Length - 1] = new User(processedInput[0], processedInput[1]);
-                    Array.Resize(ref users, users.Length + 1);
-                    Console.WriteLine("You are signed in!");
+                    if (!FindUserByNickname(processedInput[0]))
+                    {
+                        this.users[users.Length - 1] = new User(processedInput[0], processedInput[1]);
+                        Array.Resize(ref users, users.Length + 1);
+                        Animation(70);
+                        Console.WriteLine("You are signed in!");
+                    }
                 }
             }
             else
@@ -87,41 +115,75 @@ namespace Contact.Controllers
 
         public bool FindUser(string input)
         {
-            string[] processedInput = ProcessInput(input);
-
-            if (users.Length == 1 && users[0] == null)
+            if (input != null)
             {
-                Console.WriteLine("There are no users.");
+                string[] processedInput = ProcessInput(input);
+
+                if (users.Length == 1 && users[0] == null)
+                {
+                    Console.WriteLine("There are no users.");
+                    return false;
+                }
+
+                else
+                    for (int i = 0; i < users.Length; i++)
+                    {
+                        if (users[i] == null) continue;
+                        else if (users[i].nickname == processedInput[0] && users[i].password == processedInput[1])
+                        {
+                            Console.Clear();
+                            Console.WriteLine($"Welcome, {users[i].nickname}!");
+                            return true;
+                        }
+                    }
+            }
+            else
+            {
+                Console.WriteLine("Incorrect name and/or password input.");
                 return false;
             }
-               
-            else
-                for (int i = 0; i < users.Length; i++)
-                {
-                    if (users[i] == null) continue;
-                    else if (users[i].nickname == processedInput[0] && users[i].password == processedInput[1])
-                    {
-                        Console.WriteLine($"Welcome, {users[i].nickname}!");
-                        return true;
-                    }
-                }
-            Console.WriteLine("Incorrect name and/or password input.");
             return false;
         }
 
         private string[] ProcessInput(string input)
         {
             string[] userInput = input.Split(",");
-            string[] processedInput = new string[userInput.Length];
-
-            for (int i = 0; i < userInput.Length; i++)
+            if (userInput.Length == 2)
             {
-                processedInput[i] = userInput[i].Trim();
-            }
+                string[] processedInput = new string[userInput.Length];
 
-            return processedInput;
+                for (int i = 0; i < userInput.Length; i++)
+                {
+                    processedInput[i] = userInput[i].Trim();
+                }
+
+                return processedInput;
+            }
+            return null;
         }
 
+        public void SignIn()
+        {
+            Console.Clear();
+            Console.WriteLine("Create nickname and password separated by comma (,)\nRequirements: \n" +
+                            "1. The nickname should consist of at least 3 characters and at most 20 characters.\n" +
+                            "2. The password should contain at least one symbol, and one number.\n" +
+                            "\tThe minimum length of password is: 6\n" +
+                            "\tThe maximum length of password is: 20\n");
+        }
 
+        public void SignUp()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter nickname and password, separated by comma (,)");
+        }
+
+        public void Entry()
+        {
+            Console.ReadLine();
+            Console.Clear();
+            Console.WriteLine("Choose option:\n1.Sign in.\n2.Sign up.\n");
+            Console.WriteLine("Enter exit to leave application.");
+        }
     }
 }

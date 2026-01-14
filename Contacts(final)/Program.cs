@@ -13,8 +13,9 @@ namespace Contact
         {
             string? readResult;
             string menuSelection = "";
+            string? thisUser;
             UserController userController = new UserController();
-
+            
             User nijat = new User("nijat", "qwerty90@");
             User ali = new User("ali", "12345a!");
             
@@ -25,15 +26,14 @@ namespace Contact
             contactController.AddContact("vusal","hacixelilov","+994503211233");
             contactController.AddContact("seyyad","babazade", "+994503211233");
             contactController.AddContact("sadiq", "axundov", "+994502098010");
-            contactController.Animation(75);
+            
             contactController = new ContactController(ali);
             contactController.AddContact("nihat", "huseynli", "+994512092156");
             contactController.AddContact("mehemmed", "bayramov", "+994500981212");
 
             do
             {
-                Console.WriteLine("Choose option:\n1.Sign in.\n2.Sign up.\n");
-                Console.WriteLine("Enter exit to leave application.");
+                userController.Entry();
                 readResult = Console.ReadLine();
                 if (readResult != null)
                     menuSelection = readResult.ToLower();
@@ -42,37 +42,107 @@ namespace Contact
                 {
                     case "1":
 
-                        Console.WriteLine("Create nickname and password separated by comma (,)\nRequirements: \n" +
-                                        "1. The nickname should consist of at least 3 characters and at most 20 characters.\n" +
-                                        "2. The password should contain at least one symbol, and one number.\n" +
-                                        "\tThe minimum length of password is: 6\n" +
-                                        "\tThe maximum length of password is: 20\n");
+                        userController.SignIn();
                         readResult = Console.ReadLine();
 
                         if (readResult != null)
                         {
                             userController.AddUser(readResult);
                             contactController = new ContactController(userController.GetUser(readResult));
-                            contactController.AddContact("nicat", "qurbanov", "+994504801601");
                         }
+                            break;
 
-
-                        break;
                     case "2":
-                        Console.WriteLine("Enter nickname and password, separated by comma (,)");
-                        readResult = Console.ReadLine();
+                        userController.SignUp();
+                        thisUser = Console.ReadLine();
 
-                        if (readResult != null)
+                        if (thisUser != null)
                         {
-                            if (userController.FindUser(readResult))
+                            if (userController.FindUser(thisUser))
                             {
-                                contactController.ShowContacts(userController.GetUser(readResult));
+                                contactController.ShowContacts(userController.GetUser(thisUser));
+                                Console.WriteLine("Choose option:\n1.Add contact\n2.Update contact\n3.Delete contact");
+                                readResult = Console.ReadLine();
+
+                                if (readResult != null)
+                                    menuSelection = readResult;
+
+                                switch(menuSelection)
+                                {
+                                    case "1":
+
+                                        Console.WriteLine("Write contact's first name, last name and phone number separated by comma respectively.");
+
+                                        break;
+                                    case "2":
+
+                                        Console.WriteLine("Enter ID of the contact you want to modify.");
+                                        readResult = Console.ReadLine();
+
+                                        int index = 0;
+                                        if (readResult != null)
+                                            int.TryParse(readResult, out index);
+                                        userController.Animation(90);
+
+                                        if (contactController.CheckID(index))
+                                        {
+                                            Console.WriteLine("Choose option:\n1.Update first name\n2.Update last name\n3.Update phone number\n");
+                                            readResult = Console.ReadLine();
+                                            if (readResult != null)
+                                                menuSelection = readResult;
+
+                                            switch (menuSelection)
+                                            {
+                                                case "1":
+
+                                                    Console.WriteLine("Enter the new first name.");
+                                                    readResult = Console.ReadLine();
+
+                                                    if (readResult != null)
+                                                        contactController.UpdateContactFirstNameByID(index, readResult);
+
+                                                    contactController.ShowContacts(userController.GetUser(thisUser));
+                                                    break;
+                                                case "2":
+
+                                                    Console.WriteLine("Enter the new last name.");
+                                                    readResult = Console.ReadLine();
+
+                                                    if (readResult != null)
+                                                        contactController.UpdateContactLastNameByID(index, readResult);
+
+                                                    contactController.ShowContacts(userController.GetUser(thisUser));
+                                                    break;
+                                                case "3":
+
+                                                    Console.WriteLine("Enter the new phone number.");
+                                                    readResult = Console.ReadLine();
+
+                                                    if (readResult != null)
+                                                        contactController.UpdateContactNumberByID(index, readResult);
+
+                                                    contactController.ShowContacts(userController.GetUser(thisUser));
+                                                    break;
+
+                                            }
+                                        }
+                                        break;
+                                        
+                                    case "3":
+
+                                        Console.WriteLine("Enter ID of the contact you want to delete.");
+                                        readResult= Console.ReadLine();
+
+                                        if (readResult != null)
+                                            contactController.DeleteContact(readResult);
+
+                                        contactController.ShowContacts(userController.GetUser(thisUser));
+                                        break;
+                                }
                             }
                         }
-
                         break;
                 }
-
             } while (menuSelection != "exit");
         }
     }

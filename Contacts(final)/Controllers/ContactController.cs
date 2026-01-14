@@ -22,8 +22,8 @@ namespace Contact.Controllers
         {
             if(CheckNumber(contact.phoneNumber))
             {
-                user.contacts[user.contacts.Length - 1] = contact;
-                Array.Resize(ref user.contacts, user.contacts.Length + 1);
+                this.user.contacts[this.user.contacts.Length - 1] = contact;
+                Array.Resize(ref this.user.contacts, this.user.contacts.Length + 1);
             }
         }
 
@@ -48,18 +48,17 @@ namespace Contact.Controllers
                     Thread.Sleep(sleep);
                 }
                 count++;
-            } while (count != 10);
+            } while (count != 3);
 
             Console.Write($"\r{new string(' ', Console.BufferWidth)}");
-
         }
 
         public void ShowContacts(User user)
         {
-            foreach(Contact contact in user.contacts)
+            foreach(Contact contact in this.user.contacts)
             {
                 if (contact == null) continue;
-                Console.WriteLine($"\n``````````````````````{Array.IndexOf(user.contacts, contact) + 1}``````````````````````\n" +
+                Console.WriteLine($"\n``````````````````````{Array.IndexOf(this.user.contacts, contact) + 1}``````````````````````\n" +
                                   $"First name:\t\t{contact.firstName}\n" +
                                   $"Last name:\t\t{contact.lastName}\n" +
                                   $"Telephone number:\t{contact.phoneNumber}\n" +
@@ -67,16 +66,28 @@ namespace Contact.Controllers
             }
         }
 
-        public void UpdateContactNumberByID(int contactIndex, string number)
+        public void UpdateContactNumberByID(int index, string number)
         {
-            if (CheckID(contactIndex))
-                contacts[contactIndex].phoneNumber = number;
+            Console.Clear();
+            Animation(70);
+            if (CheckID(index))
+                this.user.contacts[index - 1].phoneNumber = number;
         }
 
-        public void UpdateContactFirstNameByID(int contactIndex, string firstName)
+        public void UpdateContactLastNameByID(int index, string lastName)
         {
-            if (CheckID(contactIndex))
-                contacts[contactIndex].firstName = firstName;
+            Console.Clear();
+            Animation(30);
+            if (CheckID(index))
+                this.user.contacts[index - 1].lastName = lastName;
+        }
+
+        public void UpdateContactFirstNameByID(int index, string firstName)
+        {
+            Console.Clear();
+            Animation(60);
+            if (CheckID(index))
+                this.user.contacts[index - 1].firstName = firstName;
         }
 
         private bool CheckNumber(string number)
@@ -87,9 +98,10 @@ namespace Contact.Controllers
                 Console.WriteLine("Invalid number.");
                 return false;
         }
-        private bool CheckID(int contactIndex)
+
+        public bool CheckID(int index)
         {
-            if (contactIndex >= contacts.Length || contactIndex < 0)
+            if (index >= this.user.contacts.Length || index < 0)
             {
                 Console.WriteLine("Invalid ID");
                 return false;
@@ -98,12 +110,13 @@ namespace Contact.Controllers
                 return true;
         }
 
-        public void DeleteContact(int contactIndex)
+        public void DeleteContact(string contactIndex)
         {
-            if(CheckID(contactIndex))
-                contacts[contactIndex] = null;
+            Console.Clear();
+            Animation(60);
+            int.TryParse(contactIndex, out int index);
+            if(CheckID(index))
+                this.user.contacts[index - 1] = null;
         }
-
-
     }
 }
